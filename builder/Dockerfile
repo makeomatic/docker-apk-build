@@ -1,11 +1,9 @@
+FROM    alpine:3.4
 
-
-FROM    alpine:edge
-
+ARG     HTTP_PROXY
 ADD     repositories /etc/apk/repositories
-RUN     apk -U add alpine-sdk
-
-RUN     mkdir -p /var/cache/distfiles && \
+RUN     apk --update add alpine-sdk && \
+        mkdir -p /var/cache/distfiles && \
         adduser -D packager && \
         addgroup packager abuild && \
         chgrp abuild /var/cache/distfiles && \

@@ -1,10 +1,9 @@
-
 BUILD_ID ?= ${USER}
-
+HTTP_PROXY := $(shell ifconfig en0 | grep inet | grep -v inet6 | awk '{print $$2}')
 
 .PHONY: builder
 builder:
-	docker build -t apk_builder:${BUILD_ID} builder/
+	docker build -t apk_builder:${BUILD_ID} --build-arg HTTP_PROXY=http://${HTTP_PROXY}:8080 builder/
 
 target:
 	mkdir -p target
@@ -21,6 +20,7 @@ user.abuild:
 
 build: builder target aports
 	docker run -ti \
+		-e HTTP_PROXY=http://${HTTP_PROXY}:8080 \
 		-v ${PWD}/user.abuild/:/home/packager/.abuild \
 		-v ${PWD}/aports:/work \
 		-v ${PWD}/target:/target \
@@ -30,10 +30,11 @@ build: builder target aports
 
 .PHONY: tester
 tester:
-	docker build -t apk_testing:${BUILD_ID} testing/
+	docker build -t apk_testing:${BUILD_ID} --build-arg HTTP_PROXY=http://${HTTP_PROXY}:8080 testing/
 
 test: tester target
 	docker run -ti \
+		-e HTTP_PROXY=http://${HTTP_PROXY}:8080 \
 		-v ${PWD}/target:/repo \
 		-v ${PWD}/user.abuild/:/home/abuild/ \
 		--privileged \

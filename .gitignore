@@ -2,3 +2,6 @@
 user.abuild/
 target/
 aports/
+!target/community/x86_64/*
+!user.abuild/*.pub
+!aports/community/libvips/APKBUILD

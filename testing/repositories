@@ -1,2 +1,2 @@
-http://alpine-mirror.dnephin.net/alpine/edge/main
-@custom /repo/main
+http://mirror.yandex.ru/mirrors/alpine/v3.4/main
+@custom /repo/community

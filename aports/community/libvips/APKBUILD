@@ -1,0 +1,47 @@
+# Contributor: Vitaly Aminev <v@makeomatic.ru>
+# Maintainer: Vitaly Aminev <v@makeomatic.ru>
+pkgname=libvips
+pkgver=8.3.1
+pkgrel=0
+pkgdesc="libvips"
+url="https://github.com/jcupitt/libvips"
+arch="all"
+license="LGPL"
+depends="libgomp libintl libxml2 gettext libpng libjpeg-turbo tiff libwebp libexif orc lcms2 fftw"
+depends_dev="libjpeg-turbo-dev pkgconfig zlib-dev tiff-dev libexif-dev lcms2-dev fftw-dev gettext-dev libffi-dev libpng-dev
+	libwebp-dev libxml2-dev orc-dev"
+makedepends="$depends_dev build-base glib-dev"
+install=""
+subpackages="$pkgname-dev $pkgname-doc"
+source="http://www.vips.ecs.soton.ac.uk/supported/current/vips-$pkgver.tar.gz"
+
+_builddir="$srcdir"/vips-$pkgver
+prepare() {
+	local i
+	cd "$_builddir"
+	for i in $source; do
+		case $i in
+		*.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
+		esac
+	done
+}
+
+build() {
+	cd "$_builddir"
+	CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" ./configure \
+		--prefix=/usr \
+		--disable-static \
+		--disable-debug \
+		--without-python \
+		|| return 1
+	make -j4 || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make DESTDIR="$pkgdir" install
+}
+
+md5sums="1213f9a4286dad44790cf90838c229a5  vips-8.3.1.tar.gz"
+sha256sums="09cb7f8d5640c7693bae07080202de0cead60c668e086f2739248bacd40a1006  vips-8.3.1.tar.gz"
+sha512sums="0ba378015b85688f173be59d76655fc33a6704e8bad4bc91261c3e5d4851a288e1c083718b2a03076fd2d9069c9ee6110780ae64b4d22e49ba68fa3cacece212  vips-8.3.1.tar.gz"
