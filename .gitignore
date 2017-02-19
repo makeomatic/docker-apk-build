@@ -4,5 +4,4 @@ target/
 aports/
 !target/community/x86_64/*
 !user.abuild/*.pub
-!aports/community/libvips/APKBUILD
-!aports/community/mozjpeg/APKBUILD
+!aports/community/vips/APKBUILD

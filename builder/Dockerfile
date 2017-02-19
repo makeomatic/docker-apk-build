@@ -1,6 +1,5 @@
-FROM    alpine:3.4
+FROM    alpine:3.5
 
-ARG     HTTP_PROXY
 ADD     repositories /etc/apk/repositories
 RUN     apk --update add alpine-sdk && \
         mkdir -p /var/cache/distfiles && \
